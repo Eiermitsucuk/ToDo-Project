@@ -1,5 +1,5 @@
 class ToDosController < ApplicationController
-  before_action :set_to_do, only: %i[ show edit update destroy ]
+  before_action :set_to_do, only: %i[show edit update destroy]
 
   # GET /to_dos or /to_dos.json
   def index
@@ -50,7 +50,6 @@ class ToDosController < ApplicationController
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
     @to_do.destroy!
-
     respond_to do |format|
       format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
       format.json { head :no_content }
@@ -58,13 +57,12 @@ class ToDosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_to_do
-      @to_do = ToDo.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def to_do_params
-      params.require(:to_do).permit(:title, :description, :status, :createTime)
-    end
+  def set_to_do
+    @to_do = ToDo.find(params[:id])
+  end
+
+  def to_do_params
+    params.require(:to_do).permit(:title, :description, :status)
+  end
 end
