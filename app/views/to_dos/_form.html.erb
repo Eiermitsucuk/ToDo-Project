@@ -34,6 +34,11 @@
   </div>
 
   <div>
+    <%= form.label :assignee_id, "Assign To", style: "display: block" %>
+    <%= form.collection_select :assignee_id, User.all, :id, :email, prompt: 'Select a user' %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

@@ -1,9 +1,11 @@
 class ToDosController < ApplicationController
   before_action :set_to_do, only: %i[show edit update destroy]
+  before_action :authenticate_user!  # Ensure only authenticated users can access
 
   # GET /to_dos or /to_dos.json
   def index
-    @to_dos = ToDo.all
+    # Show only todos assigned to the current user
+    @to_dos = current_user.assigned_todos
   end
 
   # GET /to_dos/1 or /to_dos/1.json
@@ -21,7 +23,8 @@ class ToDosController < ApplicationController
 
   # POST /to_dos or /to_dos.json
   def create
-    @to_do = ToDo.new(to_do_params)
+    @to_do = current_user.created_todos.build(to_do_params)  # Assign creator
+    @to_do.assignee_id = params[:to_do][:assignee_id]  # Assign to another user
 
     respond_to do |format|
       if @to_do.save
@@ -63,6 +66,6 @@ class ToDosController < ApplicationController
   end
 
   def to_do_params
-    params.require(:to_do).permit(:title, :description, :status)
+    params.require(:to_do).permit(:title, :description, :status, :assignee_id)
   end
 end

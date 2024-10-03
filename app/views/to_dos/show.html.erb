@@ -1,6 +1,27 @@
-<p style="color: green"><%= notice %></p>
+<p>
+  <strong>Title:</strong>
+  <%= @to_do.title %>
+</p>
 
-<%= render @to_do %>
+<p>
+  <strong>Description:</strong>
+  <%= @to_do.description %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @to_do.status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @to_do.creator.email %>
+</p>
+
+<p>
+  <strong>Assigned to:</strong>
+  <%= @to_do.assignee.email if @to_do.assignee %>
+</p>
 
 <div>
   <%= link_to "Edit this to do", edit_to_do_path(@to_do) %> |
