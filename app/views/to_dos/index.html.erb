@@ -2,13 +2,39 @@
 
 <h1>To dos</h1>
 
-<div id="to_dos">
-  <% @to_dos.each do |to_do| %>
-    <%= render to_do %>
-    <p>
-      <%= link_to "Show this to do", to_do %>
-    </p>
-  <% end %>
+<div id="to_do-columns" style="display: flex; justify-content: space-between;">
+  <!-- To Do Column -->
+  <div class="column">
+    <h2>To Do</h2>
+    <% @to_dos['to_do']&.each do |to_do| %>
+      <div class="to-do-item">
+        <%= render to_do %>
+        <p><%= link_to "Show this to do", to_do %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- In Progress Column -->
+  <div class="column">
+    <h2>In Progress</h2>
+    <% @to_dos['in_progress']&.each do |to_do| %>
+      <div class="to-do-item">
+        <%= render to_do %>
+        <p><%= link_to "Show this to do", to_do %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Done Column -->
+  <div class="column">
+    <h2>Done</h2>
+    <% @to_dos['done']&.each do |to_do| %>
+      <div class="to-do-item">
+        <%= render to_do %>
+        <p><%= link_to "Show this to do", to_do %></p>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <%= link_to "New to do", new_to_do_path %>

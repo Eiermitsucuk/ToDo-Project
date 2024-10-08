@@ -5,7 +5,7 @@ class ToDosController < ApplicationController
   # GET /to_dos or /to_dos.json
   def index
     # Show only todos assigned to the current user
-    @to_dos = current_user.assigned_todos
+    @to_dos = current_user.assigned_todos.order(created_at: :desc).group_by(&:status)
   end
 
   # GET /to_dos/1 or /to_dos/1.json
@@ -24,7 +24,7 @@ class ToDosController < ApplicationController
   # POST /to_dos or /to_dos.json
   def create
     @to_do = current_user.created_todos.build(to_do_params)  # Assign creator
-    @to_do.assignee_id = params[:to_do][:assignee_id]  # Assign to another user
+    @to_do.assignee_id = params[:to_do][:assignee_id] if params[:to_do][:assignee_id].present?  # Assign to another user
 
     respond_to do |format|
       if @to_do.save
@@ -52,7 +52,7 @@ class ToDosController < ApplicationController
 
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
-    @to_do.destroy!
+    @to_do.destroy
     respond_to do |format|
       format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
       format.json { head :no_content }
@@ -62,7 +62,10 @@ class ToDosController < ApplicationController
   private
 
   def set_to_do
-    @to_do = ToDo.find(params[:id])
+    @to_do = ToDo.find_by(id: params[:id])
+    unless @to_do
+      redirect_to to_dos_url, alert: "To do not found."  
+    end
   end
 
   def to_do_params
