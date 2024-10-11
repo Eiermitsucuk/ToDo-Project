@@ -1,40 +1,79 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>To dos</h1>
+<div class="format-selection" style="margin-bottom: 20px; text-align: center;">
+  <%= link_to "View as JSON", to_dos_path(format: :json), class: "btn btn-secondary" %>
+  <%= link_to "Download as PDF", to_dos_path(format: :pdf), class: "btn btn-secondary" %>
+</div>
 
 <div id="to_do-columns" style="display: flex; justify-content: space-between;">
   <!-- To Do Column -->
-  <div class="column">
+  <div class="column" id="to-do-column">
     <h2>To Do</h2>
-    <% @to_dos['to_do']&.each do |to_do| %>
-      <div class="to-do-item">
-        <%= render to_do %>
-        <p><%= link_to "Show this to do", to_do %></p>
-      </div>
-    <% end %>
+    <div id="to_do_list" data-status="to_do">
+      <% @to_dos['to_do']&.each do |to_do| %>
+        <div class="to-do-item" data-id="<%= to_do.id %>">
+          <%= render to_do %>
+          <p><%= link_to "Show this to do", to_do %></p>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <!-- In Progress Column -->
-  <div class="column">
+  <div class="column" id="in-progress-column">
     <h2>In Progress</h2>
-    <% @to_dos['in_progress']&.each do |to_do| %>
-      <div class="to-do-item">
-        <%= render to_do %>
-        <p><%= link_to "Show this to do", to_do %></p>
-      </div>
-    <% end %>
+    <div id="in_progress_list" data-status="in_progress">
+      <% @to_dos['in_progress']&.each do |to_do| %>
+        <div class="to-do-item" data-id="<%= to_do.id %>">
+          <%= render to_do %>
+          <p><%= link_to "Show this to do", to_do %></p>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <!-- Done Column -->
-  <div class="column">
+  <div class="column" id="done-column">
     <h2>Done</h2>
-    <% @to_dos['done']&.each do |to_do| %>
-      <div class="to-do-item">
-        <%= render to_do %>
-        <p><%= link_to "Show this to do", to_do %></p>
-      </div>
-    <% end %>
+    <div id="done_list" data-status="done">
+      <% @to_dos['done']&.each do |to_do| %>
+        <div class="to-do-item" data-id="<%= to_do.id %>">
+          <%= render to_do %>
+          <p><%= link_to "Show this to do", to_do %></p>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
 
-<%= link_to "New to do", new_to_do_path %>
+  <div style="margin-bottom: 20px; width: 100%; text-align: center;">
+    <%= link_to 'Create New ToDo', new_to_do_path, class: 'btn btn-primary' %>
+  </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const columns = ['to_do_list', 'in_progress_list', 'done_list'];
+
+    columns.forEach(function(column) {
+      new Sortable(document.getElementById(column), {
+        group: 'shared',
+        animation: 150,
+        onEnd: function(evt) {
+          const itemId = evt.item.dataset.id;
+          const newStatus = evt.to.dataset.status;
+
+          fetch(`/to_dos/${itemId}/update_status`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ status: newStatus })
+          }).then(response => {
+            if (!response.ok) {
+              alert("Error updating status");
+            }
+          });
+        }
+      });
+    });
+  });
+</script>

@@ -13,37 +13,6 @@
  *= require_tree .
  *= require_self
  */
-/* Container for the form */
-.container {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-}
-
-/* Form elements styling */
-input[type=text], input[type=datetime-local], select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-/* Submit button styling */
-input[type=submit] {
-    width: 100%;
-    background-color: #04AA6D;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-/* Hover effect for the submit button */
-input[type=submit]:hover {
-    background-color: #45a049;
-}
+/* Reset some browser default styles */
+/* General Styles for Both Pages */
+/* General Reset */

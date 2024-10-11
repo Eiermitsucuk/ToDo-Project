@@ -4,8 +4,16 @@ class ToDosController < ApplicationController
 
   # GET /to_dos or /to_dos.json
   def index
-    # Show only todos assigned to the current user
     @to_dos = current_user.assigned_todos.order(created_at: :desc).group_by(&:status)
+  
+    respond_to do |format|
+      format.html  
+      format.json { render json: @to_dos }
+      format.pdf do
+        pdf = ToDoPdf.new(@to_dos)
+        send_data pdf.render, filename: 'to_dos.pdf', type: 'application/pdf', disposition: 'inline'
+      end
+    end
   end
 
   # GET /to_dos/1 or /to_dos/1.json
@@ -37,6 +45,16 @@ class ToDosController < ApplicationController
     end
   end
 
+  def update_status
+    @to_do = ToDo.find(params[:id]) 
+    
+    if @to_do.update(status: params[:status])
+      render json: { message: 'Status updated' }, status: :ok
+    else
+      render json: { error: 'Error updating status' }, status: :unprocessable_entity
+    end
+  end  
+
   # PATCH/PUT /to_dos/1 or /to_dos/1.json
   def update
     respond_to do |format|
@@ -51,7 +69,7 @@ class ToDosController < ApplicationController
   end
 
   # DELETE /to_dos/1 or /to_dos/1.json
-  def destroy
+  def destroy 
     @to_do.destroy
     respond_to do |format|
       format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
