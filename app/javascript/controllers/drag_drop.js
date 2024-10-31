@@ -28,3 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+// database_authenticable, helpers, application_controller, rememberable, gem "pundit",
