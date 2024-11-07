@@ -4,10 +4,10 @@ class ToDosController < ApplicationController
 
   # GET /to_dos or /to_dos.json
   def index
-    @to_dos = current_user.assigned_todos.order(created_at: :desc).group_by(&:status)
-  
+    @to_dos = policy_scope(ToDo).order(created_at: :desc).group_by(&:status)  # Use Pundit scope to filter todos
+
     respond_to do |format|
-      format.html  
+      format.html
       format.json { render json: @to_dos }
       format.pdf do
         pdf = ToDoPdf.new(@to_dos)
@@ -15,6 +15,7 @@ class ToDosController < ApplicationController
       end
     end
   end
+
 
   # GET /to_dos/1 or /to_dos/1.json
   def show
@@ -69,7 +70,8 @@ class ToDosController < ApplicationController
   end
 
   # DELETE /to_dos/1 or /to_dos/1.json
-  def destroy 
+  def destroy
+    authorize(@to_do)
     @to_do.destroy
     respond_to do |format|
       format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
