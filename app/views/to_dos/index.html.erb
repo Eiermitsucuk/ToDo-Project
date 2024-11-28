@@ -86,20 +86,37 @@
           const itemId = evt.item.dataset.id;
           const newStatus = evt.to.dataset.status;
 
-          fetch(`/to_dos/${itemId}/update_status`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ status: newStatus })
-          }).then(response => {
-            if (!response.ok) {
-              alert("Error updating status");
-            }
-          });
+            fetch(`/to_dos/${itemId}/update_status`, {
+                // This makes a request to the server. It goes to the `/to_dos/:id/update_status` URL.
+                // The `itemId` (from evt.item.dataset.id) replaces `:id` in the URL.
+
+                method: 'PATCH',
+                // PATCH means we want to update part of an existing resource (in this case, the todo's status).
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    // The data we're sending is in JSON format.
+
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    // - CSRF tokens protect against "cross-site request forgery" attacks.
+                    // - It's like proving to the server that this request came from our app.
+                    // - The `meta` tag defines metadata, which is information about data. They always go inside the
+                    // - header and are typically used to specify our requests.
+                },
+
+                body: JSON.stringify({ status: newStatus })
+                // This is the actual data we're sending to the server.
+                // - `newStatus` is the updated status for the todo (e.g., "to_do", "in_progress", or "done").
+                // - We turn it into a JSON string so the server can read it properly.
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        alert("Error updating status");
+                    }
+        });
         }
       });
     });
   });
 </script>
+<!-- shift f6 -->

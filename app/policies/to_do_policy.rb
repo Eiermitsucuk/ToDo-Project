@@ -1,19 +1,19 @@
-# frozen_string_literal: true
 class ToDoPolicy < ApplicationPolicy
-  # Define scope for fetching todos
   class Scope < Scope
     def resolve
-      user.admin? ? scope.all : scope.where(assignee_id: user.id)
+      if user.admin? || user.project_manager?
+        scope.all
+      else
+        scope.where(assignee_id: user.id)
+      end
     end
   end
 
-  # Only admins can delete todos
   def destroy?
     user.admin?
   end
 
-  # Authorization for viewing a specific todo
   def show?
-    user.admin? || record.assignee_id == user.id
+    user.admin? || user.project_manager? || record.assignee_id == user.id
   end
 end

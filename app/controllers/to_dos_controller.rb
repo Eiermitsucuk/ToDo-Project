@@ -1,6 +1,7 @@
 class ToDosController < ApplicationController
   before_action :set_to_do, only: %i[show edit update destroy]
-  before_action :authenticate_user!  # Ensure only authenticated users can access
+  before_action :authenticate_user!
+  before_action :authorize_todo, only: %i[show edit update destroy]
 
   # GET /to_dos or /to_dos.json
   def index
@@ -15,7 +16,6 @@ class ToDosController < ApplicationController
       end
     end
   end
-
 
   # GET /to_dos/1 or /to_dos/1.json
   def show
@@ -47,14 +47,14 @@ class ToDosController < ApplicationController
   end
 
   def update_status
-    @to_do = ToDo.find(params[:id]) 
-    
+    @to_do = ToDo.find(params[:id])
+
     if @to_do.update(status: params[:status])
       render json: { message: 'Status updated' }, status: :ok
     else
       render json: { error: 'Error updating status' }, status: :unprocessable_entity
     end
-  end  
+  end
 
   # PATCH/PUT /to_dos/1 or /to_dos/1.json
   def update
@@ -71,7 +71,6 @@ class ToDosController < ApplicationController
 
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
-    authorize(@to_do)
     @to_do.destroy
     respond_to do |format|
       format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
@@ -84,8 +83,12 @@ class ToDosController < ApplicationController
   def set_to_do
     @to_do = ToDo.find_by(id: params[:id])
     unless @to_do
-      redirect_to to_dos_url, alert: "To do not found."  
+      redirect_to to_dos_url, alert: "To do not found."
     end
+  end
+
+  def authorize_todo
+    authorize @to_do
   end
 
   def to_do_params
