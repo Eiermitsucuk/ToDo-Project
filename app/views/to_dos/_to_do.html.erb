@@ -19,4 +19,14 @@
     <%= to_do.createTime %>
   </p>
 
+  <% if to_do.deadline.present? %>
+    <p class="<%= deadline_class(to_do) %>">
+      <strong>Deadline:</strong>
+      <%= to_do.deadline.strftime('%d %b %Y, %H:%M') %>
+    </p>
+  <% else %>
+    <p>
+      <strong>Deadline:</strong> None
+    </p>
+  <% end %>
 </div>

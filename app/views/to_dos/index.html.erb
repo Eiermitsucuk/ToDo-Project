@@ -1,3 +1,5 @@
+<%= javascript_include_tag "controllers/drag_drop.js" %>
+
 <div class="format-selection text-center mb-4">
   <%= link_to "View as JSON", to_dos_path(format: :json), class: "btn btn-secondary me-2" %>
   <%= link_to "Download as PDF", to_dos_path(format: :pdf), class: "btn btn-secondary" %>
@@ -73,50 +75,4 @@
 <div class="text-center mt-4">
   <%= link_to 'Create New ToDo', new_to_do_path, class: 'btn btn-primary btn-lg' %>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const columns = ['to_do_list', 'in_progress_list', 'done_list'];
-
-    columns.forEach(function(column) {
-      new Sortable(document.getElementById(column), {
-        group: 'shared',
-        animation: 150,
-        onEnd: function(evt) {
-          const itemId = evt.item.dataset.id;
-          const newStatus = evt.to.dataset.status;
-
-            fetch(`/to_dos/${itemId}/update_status`, {
-                // This makes a request to the server. It goes to the `/to_dos/:id/update_status` URL.
-                // The `itemId` (from evt.item.dataset.id) replaces `:id` in the URL.
-
-                method: 'PATCH',
-                // PATCH means we want to update part of an existing resource (in this case, the todo's status).
-
-                headers: {
-                    'Content-Type': 'application/json',
-                    // The data we're sending is in JSON format.
-
-                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    // - CSRF tokens protect against "cross-site request forgery" attacks.
-                    // - It's like proving to the server that this request came from our app.
-                    // - The `meta` tag defines metadata, which is information about data. They always go inside the
-                    // - header and are typically used to specify our requests.
-                },
-
-                body: JSON.stringify({ status: newStatus })
-                // This is the actual data we're sending to the server.
-                // - `newStatus` is the updated status for the todo (e.g., "to_do", "in_progress", or "done").
-                // - We turn it into a JSON string so the server can read it properly.
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        alert("Error updating status");
-                    }
-        });
-        }
-      });
-    });
-  });
-</script>
-<!-- shift f6 -->
+<!-- shift f6 , JavaScript promises, events, API, -->

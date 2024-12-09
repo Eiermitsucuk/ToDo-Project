@@ -1,11 +1,12 @@
 class ToDosController < ApplicationController
-  before_action :set_to_do, only: %i[show edit update destroy]
+  before_action :set_to_do, only: %i[show edit update destroy update_status]
   before_action :authenticate_user!
   before_action :authorize_todo, only: %i[show edit update destroy]
 
   # GET /to_dos or /to_dos.json
   def index
-    @to_dos = policy_scope(ToDo).order(created_at: :desc).group_by(&:status)  # Use Pundit scope to filter todos
+    # Fetch todos, group by status, and order by deadline (earliest first) and created_at
+    @to_dos = policy_scope(ToDo).order(deadline: :asc, created_at: :desc).group_by(&:status)
 
     respond_to do |format|
       format.html
@@ -32,8 +33,8 @@ class ToDosController < ApplicationController
 
   # POST /to_dos or /to_dos.json
   def create
-    @to_do = current_user.created_todos.build(to_do_params)  # Assign creator
-    @to_do.assignee_id = params[:to_do][:assignee_id] if params[:to_do][:assignee_id].present?  # Assign to another user
+    @to_do = current_user.created_todos.build(to_do_params) # Assign creator
+    @to_do.assignee_id = params[:to_do][:assignee_id] if params[:to_do][:assignee_id].present? # Assign to another user
 
     respond_to do |format|
       if @to_do.save
@@ -43,16 +44,6 @@ class ToDosController < ApplicationController
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @to_do.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  def update_status
-    @to_do = ToDo.find(params[:id])
-
-    if @to_do.update(status: params[:status])
-      render json: { message: 'Status updated' }, status: :ok
-    else
-      render json: { error: 'Error updating status' }, status: :unprocessable_entity
     end
   end
 
@@ -66,6 +57,15 @@ class ToDosController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @to_do.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # PATCH /to_dos/1/update_status
+  def update_status
+    if @to_do.update(status: params[:status])
+      render json: { message: 'OkiDokiDostlar' }, status: :ok
+    else
+      render json: { error: 'Error updating status' }, status: :unprocessable_entity
     end
   end
 
@@ -92,6 +92,7 @@ class ToDosController < ApplicationController
   end
 
   def to_do_params
-    params.require(:to_do).permit(:title, :description, :status, :assignee_id)
+    # Permit deadline alongside other attributes
+    params.require(:to_do).permit(:title, :description, :status, :assignee_id, :deadline)
   end
 end
