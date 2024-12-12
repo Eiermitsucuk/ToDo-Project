@@ -10,7 +10,10 @@ class ToDosController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @to_dos }
+      format.json do
+        response.headers["Cache-Control"] = "no-store"
+        render json: @to_dos
+        end
       format.pdf do
         pdf = ToDoPdf.new(@to_dos)
         send_data pdf.render, filename: 'to_dos.pdf', type: 'application/pdf', disposition: 'inline'

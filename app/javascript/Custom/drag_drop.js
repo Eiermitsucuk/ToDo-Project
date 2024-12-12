@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .catch(error => {
                         console.error("Network error", error);
-                        console.log("Failed to update status. Try again");
                     });
             }
         });
