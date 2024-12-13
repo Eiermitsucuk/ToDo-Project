@@ -21,20 +21,38 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function renderToDos(data) {
-    const container = document.getElementById("todos-container");
-    let todos;
-    if (Array.isArray(data)) {
-        todos = data;
-    } else {
-        todos = [];
-    }
-    todos.forEach(todo => {
-        const todoElement = document.createElement("div");
-        todoElement.classList.add("todo-item");
-        todoElement.innerHTML = `
-          <h3>${todo.title}</h3>
-          <p>Status: ${todo.status}</p>
-        `;
-        container.appendChild(todoElement);
+    const statusToDos = {
+        to_do: document.getElementById("to_do_list"),
+        in_progress: document.getElementById("in_progress_list"),
+        done: document.getElementById("done_list"),
+    };
+
+    Object.values(statusToDos).forEach((container) => {
+        if (container) {
+            container.innerHTML = "";
+        } else {
+            console.error("Error");
+        }
     });
-}
+if (data && typeof data === 'object') {
+    Object.keys(data).forEach((status) => {
+        const todos = data[status];
+        const container = statusToDos[status];
+
+        if (container && Array.isArray(todos)) {
+            todos.forEach((todo) => {
+                const todoElement = document.createElement("div");
+                todoElement.setAttribute("data-id", todo.id);
+                todoElement.innerHTML = `
+                <div class="card-body">
+                  <h5>${todo.title}</h5>
+                  <p><strong>Description:</strong> ${todo.description || "No description"}</p>
+                  <p><strong>Deadline:</strong> ${todo.deadline || "No deadline"}</p>
+                  <p><a href="/to_dos/${todo.id}" class="btn btn-outline-primary btn-sm mt-2">Show this to do</a></p>
+                </div>
+              `;
+                container.appendChild(todoElement);
+            })
+        }
+    });
+}}
