@@ -23,6 +23,12 @@ class ToDosController < ApplicationController
 
   # GET /to_dos/1 or /to_dos/1.json
   def show
+    @to_do = ToDo.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @to_do.to_json(include: [:creator, :assignee]) }
+    end
   end
 
   # GET /to_dos/new

@@ -1,58 +1,1 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const renderButton = document.getElementById("renderWithJS");
-
-    if (renderButton) {
-        renderButton.addEventListener("click", () => {
-            fetchToDos();
-        });
-    }
-
-    function fetchToDos() {
-        fetch("http://127.0.0.1:3000/to_dos.json")
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Fetched ToDos:", data);
-                renderToDos(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching ToDos:", error);
-            });
-    }
-});
-
-function renderToDos(data) {
-    const statusToDos = {
-        to_do: document.getElementById("to_do_list"),
-        in_progress: document.getElementById("in_progress_list"),
-        done: document.getElementById("done_list"),
-    };
-
-    Object.values(statusToDos).forEach((container) => {
-        if (container) {
-            container.innerHTML = "";
-        } else {
-            console.error("Error");
-        }
-    });
-if (data && typeof data === 'object') {
-    Object.keys(data).forEach((status) => {
-        const todos = data[status];
-        const container = statusToDos[status];
-
-        if (container && Array.isArray(todos)) {
-            todos.forEach((todo) => {
-                const todoElement = document.createElement("div");
-                todoElement.setAttribute("data-id", todo.id);
-                todoElement.innerHTML = `
-                <div class="card-body">
-                  <h5>${todo.title}</h5>
-                  <p><strong>Description:</strong> ${todo.description || "No description"}</p>
-                  <p><strong>Deadline:</strong> ${todo.deadline || "No deadline"}</p>
-                  <p><a href="/to_dos/${todo.id}" class="btn btn-outline-primary btn-sm mt-2">Show this to do</a></p>
-                </div>
-              `;
-                container.appendChild(todoElement);
-            })
-        }
-    });
-}}
+document.addEventListener("DOMContentLoaded", () => {    const renderButton = document.getElementById("renderWithJS");    if (renderButton) {        renderButton.addEventListener("click", () => {            const todosData = document.getElementById("todos-data").dataset.todos;            const todos = JSON.parse(todosData || "{}");            if (todos) {                renderToDos(todos);            } else {                console.error("No ToDo data found!");            }        });    }    function renderToDos(data) {        const statusToDos = {            to_do: document.getElementById("to_do_list"),            in_progress: document.getElementById("in_progress_list"),            done: document.getElementById("done_list"),        };        Object.values(statusToDos).forEach((container) => {            while (container.firstChild) {                container.removeChild(container.firstChild);            }        });        Object.keys(data).forEach((status) => {            const todos = data[status];            const container = statusToDos[status];            if (container && Array.isArray(todos)) {                todos.forEach((todo) => {                    const card = createToDoCard(todo, status);                    container.appendChild(card);                });            }        });    }    function createToDoCard(todo, status) {    const card = document.createElement("div");    const title = document.createElement("h5");    const cardBody = document.createElement("div");    const description = document.createElement("h5");    const descriptionLabel = document.createElement("strong");    const descriptionText = document.createTextNode(todo.description || "");    const deadline = document.createElement("p");    const deadlineLabel = document.createElement("strong");    const deadlineText= document.createTextNode(todo.deadline || "");    const showButton = document.createElement("a");    card.classList.add("card", "mb-3", "to-do-item");    card.setAttribute("data-id", todo.id)    ;    cardBody.classList.add("card-body");    title.textContent = todo.title;    descriptionLabel.textContent = "Description: ";    description.appendChild(descriptionLabel);    description.appendChild(descriptionText);    deadlineLabel.textContent = "Deadline: ";    deadline.appendChild(deadlineText);    deadline.appendChild(deadlineLabel);    showButton.href = `/to_dos/${todo.id}`;    showButton.classList.add("btn", `btn-outline-${getButtonClass(status)}`, "btn-sm", "mt-2");    showButton.textContent = "Show this to do";    cardBody.appendChild(title);    cardBody.appendChild(description);    cardBody.appendChild(deadline);    cardBody.appendChild(showButton);    card.appendChild(cardBody);    return card;    }});function getButtonClass(status) {    switch(status) {        case 'to_do':            return 'primary';        case 'in_progress':            return 'warning';        case 'done':            return 'success';        default:            return 'secondary';    }}
