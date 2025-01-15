@@ -13,18 +13,19 @@
 <header>
   <h1>To Do App</h1>
   <nav>
-    <ul>
-      <% if user_signed_in? %>
-        <li>
-          <%= button_to 'Logout', destroy_user_session_path, method: :delete %>
-        </li>
-      <% end %>
-    </ul>
+
   </nav>
 </header>
 
 <main>
   <%= yield %>
+  <ul>
+    <% if user_signed_in? %>
+      <li>
+        <%= button_to 'Logout', destroy_user_session_path, method: :delete %>
+      </li>
+    <% end %>
+  </ul>
 </main>
 </body>
 </html>

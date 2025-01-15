@@ -1,31 +1,23 @@
-<p>
-  <strong>Title:</strong>
-  <%= @to_do.title %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @to_do.description %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @to_do.status %>
-</p>
-
-<p>
-  <strong>Created by:</strong>
-  <%= @to_do.creator.email %>
-</p>
-
-<p>
-  <strong>Assigned to:</strong>
-  <%= @to_do.assignee.email if @to_do.assignee %>
-</p>
-
-<div>
-  <%= link_to "Edit this to do", edit_to_do_path(@to_do) %> |
-  <%= link_to "Back to to dos", to_dos_path %>
-  <%= javascript_include_tag "Custom/dom" %>
-  <%= button_to "Destroy this to do", @to_do, method: :delete %>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          <h3 class="mb-0">To Do Details</h3>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title"><%= @to_do.title %></h4>
+          <p class="card-text"><strong>Description:</strong> <%= @to_do.description %></p>
+          <p class="card-text"><strong>Status:</strong> <%= @to_do.status.humanize %></p>
+          <p class="card-text"><strong>Created by:</strong> <%= @to_do.creator.email %></p>
+          <p class="card-text"><strong>Assigned to:</strong> <%= @to_do.assignee&.email || "Not Assigned" %></p>
+        </div>
+        <div class="card-footer text-center">
+          <%= link_to "Edit", edit_to_do_path(@to_do), class: "btn btn-warning me-2" %>
+          <%= link_to "Back to ToDos", to_dos_path, class: "btn btn-secondary me-2" %>
+          <%= button_to "Delete", @to_do, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

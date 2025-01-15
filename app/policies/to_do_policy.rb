@@ -13,6 +13,9 @@ class ToDoPolicy < ApplicationPolicy
     user.admin?
   end
 
+  def edit?
+    user.admin? || user.project_manager?
+  end
   def show?
     user.admin? || user.project_manager? || record.assignee_id == user.id
   end

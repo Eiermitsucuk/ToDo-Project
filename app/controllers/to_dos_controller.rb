@@ -27,7 +27,7 @@ class ToDosController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: @to_do.to_json(include: [:creator, :assignee]) }
+      format.json { render json: @to_do.to_json(include: { creator: { only: :email }, assignee: { only: :email } }) }
     end
   end
 
