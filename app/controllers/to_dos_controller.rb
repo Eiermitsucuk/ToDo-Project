@@ -1,6 +1,5 @@
 class ToDosController < ApplicationController
   before_action :set_to_do, only: %i[show edit update destroy update_status]
-  before_action :authenticate_user!
   before_action :authorize_todo, only: %i[show edit update destroy]
 
   # GET /to_dos or /to_dos.json
@@ -80,11 +79,12 @@ class ToDosController < ApplicationController
 
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
-    @to_do.destroy
-    respond_to do |format|
-      format.html { redirect_to to_dos_url, notice: "To do was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    @to_do = ToDo.find_by(id: params[:id])
+      if @to_do.destroy
+        head :no_content
+      else
+        head :not_found
+      end
   end
 
   private
@@ -92,7 +92,10 @@ class ToDosController < ApplicationController
   def set_to_do
     @to_do = ToDo.find_by(id: params[:id])
     unless @to_do
-      redirect_to to_dos_url, alert: "To do not found."
+      respond_to do |format|
+        format.html { redirect_to to_dos_url, alert: "To do not found." }
+        format.json { render json: { error: "To do not found" }, status: :not_found }
+      end
     end
   end
 

@@ -10,7 +10,6 @@ class ToDo < ApplicationRecord
 
   before_create :set_create_time
 
-  # Scopes for filtering by deadline
   scope :overdue, -> { where("deadline < ?", Time.current) }
   scope :upcoming, -> { where("deadline >= ?", Time.current) }
 
