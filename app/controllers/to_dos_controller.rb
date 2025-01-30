@@ -37,6 +37,7 @@ class ToDosController < ApplicationController
 
   # GET /to_dos/1/edit
   def edit
+    @to_do = ToDo.find(params[:id])
   end
 
   # POST /to_dos or /to_dos.json

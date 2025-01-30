@@ -37,6 +37,11 @@
               <%= form.collection_select :assignee_id, User.all, :id, :email, prompt: 'Select a user', class: "form-select" %>
             </div>
 
+            <div class="mb-3">
+              <%= form.label :assignee_id, "Deadline", class: "form-label" %>
+              <%= form.date_field :deadline, min: Date.today.next_day, value: @to_do.deadline, class: "form-control" %>
+            </div>
+
             <div class="text-center">
               <%= form.submit "Update ToDo", class: "btn btn-primary me-2" %>
               <%= link_to "Back to ToDo", @to_do, class: "btn btn-secondary" %>

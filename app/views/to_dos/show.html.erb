@@ -11,6 +11,7 @@
           <p class="card-text"><strong>Status:</strong> <%= @to_do.status.humanize %></p>
           <p class="card-text"><strong>Created by:</strong> <%= @to_do.creator.email %></p>
           <p class="card-text"><strong>Assigned to:</strong> <%= @to_do.assignee&.email || "Not Assigned" %></p>
+          <p class="deadline"><strong>Deadline:</strong> <%= @to_do.deadline || "None" %></p>
         </div>
         <div class="card-footer text-center">
           <%= link_to "Edit", edit_to_do_path(@to_do), class: "btn btn-warning me-2" %>
