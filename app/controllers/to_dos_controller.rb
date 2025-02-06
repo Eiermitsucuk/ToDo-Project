@@ -61,7 +61,7 @@ class ToDosController < ApplicationController
     respond_to do |format|
       if @to_do.update(to_do_params)
         format.html { redirect_to to_do_url(@to_do), notice: "To do was successfully updated." }
-        format.json { render :show, status: :ok, location: @to_do }
+        format.json { render json: @to_do.as_json(include: [:creator, :assignee]) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @to_do.errors, status: :unprocessable_entity }

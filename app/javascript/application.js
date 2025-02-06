@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const hiddenStatusField = document.getElementById('hidden-status-field');
 
     // Toggle dropdown content visibility
-    dropdown.querySelector('.dropbtn').addEventListener('click', function(e) {
+    dropdown.querySelector('.dropbtn').addEventListener('click', function() {
         dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
     });
 
