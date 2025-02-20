@@ -90,12 +90,15 @@ class ToDosController < ApplicationController
 
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
-      if @to_do
-        @to_do.destroy
-        head :no_content
-      else
-        render json: { error: "To do not found" }, status: :not_found
+    respond_to do |format|
+    if @to_do.destroy
+        format.html { redirect_to to_dos_url, notice: 'ToDo was successfully destroyed.' }
+        format.json
+    else
+      format.html { redirect_to to_dos_url, notice: 'ToDo could not be destroyed.' }
+      format.json { render json: @to_do.errors, status: :unprocessable_entity }
       end
+    end
   end
 
   private
