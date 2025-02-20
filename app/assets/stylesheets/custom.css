@@ -1,0 +1,66 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* Main container setup to align form */
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full screen height */
+    background-color: #f4f4f4; /* Light background for contrast */
+}
+
+/* Form container with centered content */
+.form-container {
+    width: 100%;
+    max-width: 340px; /* Maximum width of form */
+    padding: 20px;
+    background: #ffffff; /* White background for the form */
+    border: 1px solid #ccc; /* Subtle border */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+    border-radius: 8px;
+}
+
+/* Styling for form fields */
+.field input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Space between fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button styling */
+.btn-container {
+    margin-top: 20px; /* Space above the button */
+}
+
+#login-btn, #signup-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#login-btn:hover, #signup-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Link and auxiliary options styling */
+.signup, .forgot-password {
+    text-align: center;
+    margin-top: 12px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+

@@ -4,7 +4,6 @@ class ToDosController < ApplicationController
 
   # GET /to_dos or /to_dos.json
   def index
-    # Fetch todos, group by status, and order by deadline (earliest first) and created_at
     @to_dos = policy_scope(ToDo).order(deadline: :asc, created_at: :desc).group_by(&:status)
 
     respond_to do |format|
@@ -32,25 +31,36 @@ class ToDosController < ApplicationController
 
   # GET /to_dos/new
   def new
-    @to_do = ToDo.new
+      @to_do = ToDo.new
+      @to_do.creator = current_user
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @to_do }
+      end
   end
 
   # GET /to_dos/1/edit
   def edit
-    @to_do = ToDo.find(params[:id])
+    @todo = ToDo.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: { todo: @todo, status_options: ToDo.statuses.keys, assignee_options: User.select(:id, :email) } }
+    end
   end
+
 
   # POST /to_dos or /to_dos.json
   def create
-    @to_do = current_user.created_todos.build(to_do_params) # Assign creator
-    @to_do.assignee_id = params[:to_do][:assignee_id] if params[:to_do][:assignee_id].present? # Assign to another user
+    @to_do = ToDo.new(to_do_params)
+    @to_do.creator = current_user
 
     respond_to do |format|
       if @to_do.save
-        format.html { redirect_to to_do_url(@to_do), notice: "To do was successfully created." }
-        format.json { render :show, status: :created, location: @to_do }
+        format.html { redirect_to @to_do, notice: 'ToDo was successfully created.' }
+        format.json { render json: @to_do, status: :created }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :new }
         format.json { render json: @to_do.errors, status: :unprocessable_entity }
       end
     end
@@ -80,11 +90,11 @@ class ToDosController < ApplicationController
 
   # DELETE /to_dos/1 or /to_dos/1.json
   def destroy
-    @to_do = ToDo.find_by(id: params[:id])
-      if @to_do.destroy
+      if @to_do
+        @to_do.destroy
         head :no_content
       else
-        head :not_found
+        render json: { error: "To do not found" }, status: :not_found
       end
   end
 

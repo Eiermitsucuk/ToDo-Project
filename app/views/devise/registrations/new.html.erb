@@ -1,28 +1,40 @@
-<h2 class="text-center mb-4">Sign Up</h2>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="login-card">
+        <div class="text-center">
+          <i class="fa fa-user-plus fa-3x text-white mb-4"></i>
+          <h2 class="text-white">SIGN UP</h2>
+          <p class="text-white">Please enter your details to create an account</p>
+        </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal" }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-group" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="form-group mb-3">
-    <%= f.label :email, class: "control-label" %>
-    <%= f.email_field :email, autofocus: true, class: "form-control" %>
+          <div class="form-group">
+            <%= f.label :email, class: "text-white" %>
+            <%= f.email_field :email, autofocus: true, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password, class: "text-white" %>
+            <%= f.password_field :password, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation, class: "text-white" %>
+            <%= f.password_field :password_confirmation, class: "form-control" %>
+          </div>
+
+          <div class="form-group text-center">
+            <%= f.submit "Sign Up", class: "btn btn-primary btn-block" %>
+          </div>
+        <% end %>
+
+        <div class="text-center text-white">
+          Already have an account? <%= link_to "Log in", new_user_session_path %>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :password, class: "control-label" %>
-    <%= f.password_field :password, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :password_confirmation, class: "control-label" %>
-    <%= f.password_field :password_confirmation, class: "form-control" %>
-  </div>
-
-  <div class="form-group text-center">
-    <%= f.submit "Sign Up", class: "btn btn-primary btn-lg" %>
-  </div>
-<% end %>
-
-<div class="text-center mt-4">
-  <%= render "devise/shared/links" %>
 </div>
